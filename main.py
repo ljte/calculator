@@ -66,25 +66,10 @@ class Interpreter:
             if self.current_ch.isdigit():
                 return Token(TokenType.INTEGER, self.extract_number())
 
-    #        if self.current_ch == '-':
-    #            self.advance()
-    #            return Token(TokenType.MINUS, '-')
-#
-#            if self.current_ch == '+':
-#                self.advance()
-#                return Token(TokenType.PLUS, '+')
-#
-#            if self.current_ch == '*':
-#                self.advance()
-#                return Token(TokenType.ASTRISK, '*')
-##
-#            if self.current_ch == '/':
-#                self.advance()
-#                return Token(TokenType.SLASH, '/')
-
-            if self.current_ch in ['+', '-', '*', '/']:
+            if self.current_ch in self.operations:
+                ch = self.current_ch
                 self.advance()
-                return Token(self.oper_types[self.current_ch], self.current_ch)
+                return Token(self.oper_types[ch], ch)
 
             self.error()
 
@@ -101,31 +86,17 @@ class Interpreter:
 
     def expr(self):
         self.token = self.get_next_token()
-        
-        left = self.token
-        self.eat(TokenType.INTEGER)
-
-        oper = self.token
-        if oper.type_ == TokenType.MINUS:
-            self.eat(TokenType.MINUS)
-        elif oper.type_ == TokenType.PLUS:
-            self.eat(TokenType.PLUS) 
-        elif oper.type_ == TokenType.ASTRISK:
-            self.eat(TokenType.ASTRISK)
-        elif oper.type_ == TokenType.SLASH:
-            self.eat(TokenType.SLASH)
-
-        right = self.token
-        self.eat(TokenType.INTEGER)
-
-        if oper.type_ == TokenType.MINUS:
-            return left.value - right.value
-        elif oper.type_ == TokenType.PLUS:
-            return left.value + right.value
-        elif oper.type_ == TokenType.ASTRISK:
-            return left.value * right.value
-        elif oper.type_ == TokenType.SLASH:
-            return left.value / right.value
+        print(self.text)
+#         left = self.token
+#         self.eat(TokenType.INTEGER)
+# 
+#         oper = self.token
+#         self.eat(self.oper_types[oper.value])
+# 
+#         right = self.token
+#         self.eat(TokenType.INTEGER)
+# 
+#         return self.operations[oper.value](left.value, right.value)
 
     def extract_number(self):
         res = ''
@@ -136,6 +107,7 @@ class Interpreter:
         except AttributeError:
             pass
         return int(res)
+
 
 if __name__ == "__main__":
 
