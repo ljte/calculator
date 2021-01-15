@@ -1,3 +1,4 @@
+from typing import Dict, Callable, Any
 from enum import Enum
 import operator
 
@@ -13,7 +14,7 @@ class TokenType(Enum):
 
 class Token:
 
-    def __init__(self, type_, value):
+    def __init__(self, type_: TokenType, value: Any):
         self.type_ = type_
         self.value = value
 
@@ -26,21 +27,21 @@ class Token:
 
 class Interpreter:
 
-    oper_types = {
+    oper_types: Dict[str, TokenType] = {
         '+': TokenType.PLUS,
         '-': TokenType.MINUS,
         '*': TokenType.ASTRISK,
         '/': TokenType.SLASH,
     }
 
-    operations = {
+    operations: Dict[str, Callable] = {
         '+': operator.add,
         '-': operator.sub,
         '*': operator.mul,
         '/': operator.floordiv,
     }
 
-    def __init__(self, text):
+    def __init__(self, text: str):
         self.text = text
         self.pos = 0
         self.token = None
@@ -57,7 +58,7 @@ class Interpreter:
         else:
             self.current_ch = self.text[self.pos]
 
-    def get_next_token(self):
+    def get_next_token(self) -> Token:
         while self.current_ch:
 
             if self.current_ch.isspace():
@@ -85,12 +86,12 @@ class Interpreter:
         else:
             self.error()
 
-    def term(self):
+    def term(self) -> int:
         t = self.token
         self.eat(TokenType.INTEGER)
         return t.value
 
-    def expr(self):
+    def expr(self) -> int:
         if self.text == "quit()":
             raise EOFError
 
@@ -104,7 +105,7 @@ class Interpreter:
            
         return result
 
-    def extract_number(self):
+    def extract_number(self) -> int:
         res = ''
         try:
             while self.current_ch.isdigit():
