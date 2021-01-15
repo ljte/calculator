@@ -90,7 +90,7 @@ class Interpreter:
 
         self.token = self.get_next_token()
         
-        result = i = 0
+        result, i = self.token.value, 0
         while self.current_ch:
 
             if i == 0:
