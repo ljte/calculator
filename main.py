@@ -59,6 +59,7 @@ class Interpreter:
 
     def get_next_token(self):
         while self.current_ch:
+
             if self.current_ch.isspace():
                 self.skip_whitespaces()
                 continue
@@ -84,29 +85,22 @@ class Interpreter:
         else:
             self.error()
 
+    def term(self):
+        t = self.token
+        self.eat(TokenType.INTEGER)
+        return t.value
+
     def expr(self):
         if self.text == "quit()":
             raise EOFError
 
         self.token = self.get_next_token()
-        
-        result, i = self.token.value, 0
+        result = self.term()
+
         while self.current_ch:
-
-            if i == 0:
-                left = self.token
-                self.eat(TokenType.INTEGER)
-            else:
-                left = Token(TokenType.INTEGER, result)
-
-            oper = self.token
-            self.eat(self.oper_types[oper.value])
-
-            right = self.token
-            self.eat(TokenType.INTEGER)
-            
-            result = self.operations[oper.value](left.value, right.value)
-            i += 1
+            oper = self.token.value
+            self.eat(self.oper_types[oper])
+            result = self.operations[oper](result, self.term())
            
         return result
 
