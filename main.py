@@ -10,6 +10,7 @@ class TokenType(Enum):
     ASTRISK = 4
     SLASH = 5
 
+
 class Token:
 
     def __init__(self, type_, value):
@@ -58,7 +59,6 @@ class Interpreter:
 
     def get_next_token(self):
         while self.current_ch:
-
             if self.current_ch.isspace():
                 self.skip_whitespaces()
                 continue
@@ -85,18 +85,30 @@ class Interpreter:
             self.error()
 
     def expr(self):
+        if self.text == "quit()":
+            raise EOFError
+
         self.token = self.get_next_token()
-        print(self.text)
-#         left = self.token
-#         self.eat(TokenType.INTEGER)
-# 
-#         oper = self.token
-#         self.eat(self.oper_types[oper.value])
-# 
-#         right = self.token
-#         self.eat(TokenType.INTEGER)
-# 
-#         return self.operations[oper.value](left.value, right.value)
+        
+        result = i = 0
+        while self.current_ch:
+
+            if i == 0:
+                left = self.token
+                self.eat(TokenType.INTEGER)
+            else:
+                left = Token(TokenType.INTEGER, result)
+
+            oper = self.token
+            self.eat(self.oper_types[oper.value])
+
+            right = self.token
+            self.eat(TokenType.INTEGER)
+            
+            result = self.operations[oper.value](left.value, right.value)
+            i += 1
+           
+        return result
 
     def extract_number(self):
         res = ''
@@ -114,12 +126,13 @@ if __name__ == "__main__":
     while True:
         try:
             text = input(">>> ")
+
+            if not text:
+                continue
+
+            interpreter = Interpreter(text)
+            print(interpreter.expr())
         except (KeyboardInterrupt, EOFError):
             break
 
-        if not text:
-            continue
-
-        interpreter = Interpreter(text)
-        print(interpreter.expr())
 
