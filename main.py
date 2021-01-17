@@ -110,18 +110,29 @@ class Interpreter:
         self.eat(TokenType.INTEGER)
         return t.value
 
-    def expr(self) -> int:
-        result = self.factor()
+    def term(self) -> int:
+        res = self.factor()
 
-        while self.token.type_ != TokenType.EOF:
+        while self.token.type_ in (TokenType.MUL, TokenType.DIV):
             oper = self.token.value
             self.eat(self.lexer.oper_types[oper])
-            result = self.lexer.operations[oper](result, self.factor())
+            res = self.lexer.operations[oper](res, self.factor())
+        
+        return res
+
+    def expr(self) -> int:
+        res = self.term()
+
+        while self.token.type_ in (TokenType.PLUS, TokenType.MINUS):
+            oper = self.token.value
+            self.eat(self.lexer.oper_types[oper])
+            res = self.lexer.operations[oper](res, self.term())
            
-        return result
+        return res
     
     def __repr__(self):
         return f"{self.__class__.__name__}({self.lexer})"
+
 
 if __name__ == "__main__":
     
