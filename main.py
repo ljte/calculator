@@ -89,6 +89,9 @@ class Lexer:
             pass
         return int(res)
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.text})"
+
 
 class Interpreter:
 
@@ -116,10 +119,12 @@ class Interpreter:
             result = self.lexer.operations[oper](result, self.factor())
            
         return result
-
+    
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.lexer})"
 
 if __name__ == "__main__":
-
+    
     while True:
         try:
             text = input(">>> ")
