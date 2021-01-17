@@ -8,8 +8,8 @@ class TokenType(Enum):
     PLUS = 1
     MINUS = 2
     INTEGER = 3
-    ASTRISK = 4
-    SLASH = 5
+    MUL = 4
+    DIV = 5
 
 
 class Token:
@@ -25,13 +25,13 @@ class Token:
         return self.__repr__()
 
 
-class Interpreter:
+class Lexer:
 
     oper_types: Dict[str, TokenType] = {
         '+': TokenType.PLUS,
         '-': TokenType.MINUS,
-        '*': TokenType.ASTRISK,
-        '/': TokenType.SLASH,
+        '*': TokenType.MUL,
+        '/': TokenType.DIV,
     }
 
     operations: Dict[str, Callable] = {
@@ -40,12 +40,11 @@ class Interpreter:
         '*': operator.mul,
         '/': operator.floordiv,
     }
-
-    def __init__(self, text: str):
+    
+    def __init__(self, text):
         self.text = text
         self.pos = 0
-        self.token = None
-        self.current_ch = self.text[self.pos]
+        self.current_ch = text[self.pos]
 
     def skip_whitespaces(self):
         while self.text[self.pos].isspace():
@@ -79,31 +78,6 @@ class Interpreter:
 
     def error(self):
         raise Exception(f"Error parsing input")
-        
-    def eat(self, token_type):
-        if self.token.type_ == token_type:
-            self.token = self.get_next_token()
-        else:
-            self.error()
-
-    def term(self) -> int:
-        t = self.token
-        self.eat(TokenType.INTEGER)
-        return t.value
-
-    def expr(self) -> int:
-        if self.text == "quit()":
-            raise EOFError
-
-        self.token = self.get_next_token()
-        result = self.term()
-
-        while self.current_ch:
-            oper = self.token.value
-            self.eat(self.oper_types[oper])
-            result = self.operations[oper](result, self.term())
-           
-        return result
 
     def extract_number(self) -> int:
         res = ''
@@ -116,6 +90,34 @@ class Interpreter:
         return int(res)
 
 
+class Interpreter:
+
+    def __init__(self, lexer: Lexer):
+        self.lexer = lexer
+        self.token = self.lexer.get_next_token()
+        
+    def eat(self, token_type):
+        if self.token.type_ == token_type:
+            self.token = self.lexer.get_next_token()
+        else:
+            self.error()
+
+    def factor(self) -> int:
+        t = self.token
+        self.eat(TokenType.INTEGER)
+        return t.value
+
+    def expr(self) -> int:
+        result = self.factor()
+
+        while self.token.type_ != TokenType.EOF:
+            oper = self.token.value
+            self.eat(self.lexer.oper_types[oper])
+            result = self.lexer.operations[oper](result, self.factor())
+           
+        return result
+
+
 if __name__ == "__main__":
 
     while True:
@@ -125,8 +127,8 @@ if __name__ == "__main__":
             if not text:
                 continue
 
-            interpreter = Interpreter(text)
-            print(interpreter.expr())
+            r = Interpreter(Lexer(text)).expr()
+            print(r)
         except (KeyboardInterrupt, EOFError):
             break
 
