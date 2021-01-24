@@ -10,8 +10,8 @@ if __name__ == "__main__":
 
         try:
             if not text:
-                continue 
-            
+                continue
+
             r = Interpreter(Lexer(text)).expr()
             print(r)
 
