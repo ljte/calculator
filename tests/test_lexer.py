@@ -14,7 +14,7 @@ class TestLexer(unittest.TestCase):
     def test_skip_whitespaces(self):
         l = Lexer('   43')
         l.skip_whitespaces()
-        assert l.pos == 3 
+        assert l.pos == 3
 
     def test_extract_number(self):
         l = Lexer('12 43')

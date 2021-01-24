@@ -36,13 +36,20 @@ class TestMath(unittest.TestCase):
 
         assert inter.factor() == 23
 
+    def test_factor_with_parenthesis(self):
+        inter = Interpreter(Lexer('5 * (2 * (3 + 6))'))
+        assert inter.token.val == 5
+        inter.eat(TokenType.INTEGER)
+        inter.eat(TokenType.MUL)
+        assert inter.factor() == 18
+
     def test_term(self):
         inter = Interpreter(Lexer('2 * 5 * 14 / 2 * 4'))
         assert inter.term() == 280
 
     def text_expr(self):
-        inter = Interpreter(Lexer('4 + 5 * 3 - 72 / 36 * 4'))
-        assert inter.expr() == 11
+        inter = Interpreter(Lexer('(4 + 5) * 3 - 72 / 36 * 4'))
+        assert inter.expr() == 19
 
 
 if __name__ == '__main__':

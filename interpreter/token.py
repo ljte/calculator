@@ -9,6 +9,8 @@ class TokenType(Enum):
     MINUS = 3
     MUL = 4
     DIV = 5
+    OPAREN = 6  # opening parenthesis
+    CPAREN = 7  # closing parenthesis
 
 
 class Token:

@@ -16,22 +16,28 @@ class Interpreter:
 
     def factor(self) -> int:
         t = self.token
-        self.eat(TokenType.INTEGER)
-        return t.val
+        if t.type_ == TokenType.INTEGER:
+            self.eat(TokenType.INTEGER)
+            return t.val
+        elif t.type_ == TokenType.OPAREN:
+            self.eat(TokenType.OPAREN)
+            r = self.expr()
+            self.eat(TokenType.CPAREN)
+            return r
 
     def term(self) -> int:
         res = self.factor()
         while self.token.type_ in (TokenType.MUL, TokenType.DIV):
             oper = self.token.val
-            self.eat(self.lexer.operation_types[oper])
-            res = self.lexer.operations[oper](res, self.factor())
+            self.eat(self.lexer.token_types_mapping[oper])
+            res = self.lexer.token_values_mapping[oper](res, self.factor())
         return res
 
     def expr(self) -> int:
         res = self.term()
         while self.token.type_ in (TokenType.PLUS, TokenType.MINUS):
             oper = self.token.val
-            self.eat(self.lexer.operation_types[oper])
-            res = self.lexer.operations[oper](res, self.term())
+            self.eat(self.lexer.token_types_mapping[oper])
+            res = self.lexer.token_values_mapping[oper](res, self.term())
         return res
 

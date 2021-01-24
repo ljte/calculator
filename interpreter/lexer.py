@@ -5,20 +5,24 @@ from .token import TokenType, Token
 
 class Lexer:
 
-    operations: Dict[str, Callable] = {
+    token_values_mapping: Dict[str, Callable] = {
         '+': operator.add,
         '-': operator.sub,
         '*': operator.mul,
         '/': operator.floordiv,
+        '(': '(',
+        ')': '(',
     }
 
-    operation_types: Dict[str, TokenType] = {
+    token_types_mapping: Dict[str, TokenType] = {
         '+': TokenType.PLUS,
         '-': TokenType.MINUS,
         '*': TokenType.MUL,
         '/': TokenType.DIV,
+        '(': TokenType.OPAREN,
+        ')': TokenType.CPAREN,
     }
-    
+
     def __init__(self, text: str):
         self.text = text
         self.pos = 0
@@ -58,10 +62,10 @@ class Lexer:
             if self.curr_ch.isdigit():
                 return Token(self.extract_number(), TokenType.INTEGER)
 
-            if self.curr_ch in self.operations:
+            if self.curr_ch in self.token_values_mapping:
                 ch = self.curr_ch
                 self.advance()
-                return Token(ch, self.operation_types[ch])
+                return Token(ch, self.token_types_mapping[ch])
 
             self.error()
 
