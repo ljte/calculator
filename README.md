@@ -1,2 +1,2 @@
-# pascal_interpreter
+## SIMPLE REPL CALCULATOR
 
