@@ -1,16 +1,16 @@
 from typing import Any
-from enum import Enum
+from enum import Enum, auto
 
 
 class TokenType(Enum):
-    EOF = 0
-    INTEGER = 1
-    PLUS = 2
-    MINUS = 3
-    MUL = 4
-    DIV = 5
-    OPAREN = 6  # opening parenthesis
-    CPAREN = 7  # closing parenthesis
+    EOF = auto()
+    INTEGER = auto()
+    PLUS = auto()
+    MINUS = auto()
+    MUL = auto()
+    DIV = auto()
+    OPAREN = auto()  # opening parenthesiauto()
+    CPAREN = auto()  # closing parenthesiauto(auto()
 
 
 class Token:
