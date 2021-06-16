@@ -9,9 +9,8 @@ class TokenType(Enum):
     MINUS = auto()
     MUL = auto()
     DIV = auto()
-    OPAREN = auto()  # opening parenthesiauto()
-    CPAREN = auto()  # closing parenthesiauto(auto()
-
+    OPAREN = auto()  # opening parenthesis
+    CPAREN = auto()  # closing parenthesis
 
 class Token:
 
